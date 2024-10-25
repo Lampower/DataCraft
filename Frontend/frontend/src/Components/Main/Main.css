@@ -1,0 +1,17 @@
+.main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-image:url(../../assets/astolfo.jpg) ;
+  background-repeat: no-repeat;
+  background-size: 40%; 
+  background-position-x: right;
+  background-position-y: bottom;
+}
+
+.bottom {
+  margin-top: auto;
+}
+
+
