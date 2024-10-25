@@ -1,5 +1,7 @@
 .constructor {
+  display: flex;
   padding: 20px;
+  flex-direction: column;
 }
 
 .start-button,.finish-button {
@@ -19,6 +21,7 @@
   background-color: #333;
   padding: 20px;
   border-radius: 10px;
+  min-width: 205px;
 }
 
 .filter-options {
