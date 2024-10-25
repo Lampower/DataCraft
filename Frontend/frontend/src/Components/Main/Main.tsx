@@ -1,13 +1,14 @@
 
 import './Main.css'
-import Board from "./Board/Board"
+import Header from '../Header/Header';
+import Download from "../Main/Download/Download";
 
 const Main = () => {
 
   return(
     <div className="main">
-      <Board/>
-
+      <Header/>
+      <Download/>
   </div>
   )
 };
