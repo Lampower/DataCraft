@@ -1,0 +1,41 @@
+.constructor {
+  padding: 20px;
+  margin-top: 50px;
+}
+
+.start-button {
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-family: sans-serif;
+  border-radius: 5px;
+}
+
+.filters-container {
+  display: flex;
+  gap: 20px;
+}
+
+.filter {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.filter-options {
+  list-style-type: none;
+  padding: 0;
+}
+
+.filter-option {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #444;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  color: #fff;
+}
+
+.filter-option.selected {
+  background-color: #666;
+}
