@@ -1,0 +1,16 @@
+.main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(43,42,48);
+  background-repeat: no-repeat;
+  background-size: 40%; 
+  background-position-x: right;
+  background-position-y: bottom;
+}
+
+.bottom {
+  margin-top: auto;
+}
+
+

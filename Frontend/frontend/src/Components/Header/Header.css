@@ -1,0 +1,22 @@
+.container{
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  border-bottom: 1px solid black;
+}
+.head-menu{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.head-menu li{
+  text-decoration: none;
+  list-style: none;
+}
+.head-menu img{
+  margin-right: 20px;
+}
+.name{
+  font-size: 24px;
+  color: aliceblue;
+}
