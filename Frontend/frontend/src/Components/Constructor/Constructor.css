@@ -7,7 +7,11 @@
 .start-button,.finish-button {
   padding: 10px 20px;
   margin-bottom: 20px;
-  width: 15%;
+  width: 20%;
+  background-color: rgb(15, 190, 175);
+  color: #fff;
+  font-size: 16px;
+  border-radius: 5px;
 }
 
 .filters-container {
