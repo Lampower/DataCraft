@@ -1,18 +1,16 @@
-﻿using Backend.Common.Configurations;
+﻿using Backend.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Database
 {
     public class DatabaseContext: DbContext
     {
-        public DatabaseContext() 
-        { 
-            Database.EnsureCreated();
-        }
+        public DbSet<TaskEntity> Tasks { get; set; }
+        public DbSet<HistoryEntity> Histories { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(DatabaseConfig.SQLITE_CONNECTION_STRING);
+            optionsBuilder.UseSqlite("Data Source=database.db");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
