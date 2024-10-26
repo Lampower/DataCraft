@@ -84,11 +84,17 @@ namespace Backend.Controllers
                 .Where(t => t.CreatedAt > date || t.UpdatedAt > date).ToList();
             tasks = FilterTask(tasks, dto.Filters);
 
-            var hashSet = GetColumnOverview(tasks, dto.Column);
-            var pagHashSet = new PaginatedList<HashKeyDto>();
-            pagHashSet.TotalLength = hashSet.Count;
-            pagHashSet.Entities = hashSet.Skip(from).Take(amount).ToList();
-            return Ok(pagHashSet);
+            Dictionary<string, PaginatedList<HashKeyDto>> responseObject = new();
+            foreach (var column in dto.Columns)
+            {
+                var hashSet = GetColumnOverview(tasks, column);
+                var pagHashSet = new PaginatedList<HashKeyDto>();
+                pagHashSet.TotalLength = hashSet.Count;
+                pagHashSet.Entities = hashSet.Skip(from).Take(amount).ToList();
+                responseObject.Add(column, pagHashSet);
+            }
+            
+            return Ok(responseObject);
         }
 
         object? SelectColumn(object field, string ColumnName)
@@ -161,7 +167,7 @@ namespace Backend.Controllers
             var result = new Dictionary<string, object>();
             var list = tasks
                 .GroupBy(t => prop.GetValue(t))
-                .Select(t => new HashKeyDto { Name = t.Key.ToString(), Count = t.Count() })
+                .Select(t => new HashKeyDto { Name = t.Key == null ? "" : t.Key.ToString(), Count = t.Count() })
                 .ToList();
             return list;
         }
