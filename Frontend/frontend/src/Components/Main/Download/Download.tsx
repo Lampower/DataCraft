@@ -120,6 +120,12 @@ const Download = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!historyEnabled) {
+      removeHistoryFile();
+    }
+  }, [historyEnabled]);
+
   return (
     <div className="download-modal">
       <div className="modal-content">
