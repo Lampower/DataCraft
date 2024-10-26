@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./NewConstructor.css";
 import ChooseFiltersModal from "./ChooseFilterModal";
+import { useNavigate } from "react-router-dom";
 
 const NewConstructor = () => {
   const [columns, setColumns] = useState([

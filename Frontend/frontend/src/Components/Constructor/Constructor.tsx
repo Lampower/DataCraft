@@ -29,7 +29,7 @@ const Constructor = () => {
     navigate("/constructor/new");
   };
 
-  const handleFormSubmission = (days: number) => {
+  const handleFormSubmission = () => {
     if (selectedPreset) {
       let d;
       console.log(selectedPreset)
@@ -92,19 +92,12 @@ const Constructor = () => {
         <button className="create-filter-button" onClick={handleNewTemplateClick}>Новый шаблон</button>
         <button
           className="apply-button"
-          onClick={() => setShowModal(true)}
+          onClick={() => handleFormSubmission()}
           disabled={!selectedPreset}
         >
           Создать отчет
         </button>
       </div>
-
-      {showModal && (
-        <TimeFilterModal 
-          onClose={() => setShowModal(false)}
-          onSubmit={handleFormSubmission}
-        />
-      )}
     </div>
   );
 };
