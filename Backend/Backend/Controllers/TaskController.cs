@@ -61,6 +61,18 @@ namespace Backend.Controllers
             return Ok();
         }
 
+        [HttpPost("filterset")]
+        public IActionResult FilterAndCount([FromBody] DiagramRequestDto dto)
+        {
+            var date = DateTime.Now.AddDays(-dto.Days);
+            var tasks = context.Tasks
+                .Where(t => t.CreatedAt > date || t.UpdatedAt > date).ToList();
+            tasks = FilterTask(tasks, dto.Filters);
+
+            var hashSet = GetColumnOverview(tasks, dto.Column);
+            return Ok(hashSet);
+        }
+
         object? SelectColumn(object field, string ColumnName)
         {
             {
@@ -123,6 +135,17 @@ namespace Backend.Controllers
             var prop = typeof(TaskEntity).GetProperty(filter.Field);
             list = list.Where(t => prop?.GetValue(t) == null ? false : prop.GetValue(t).Equals(filter.Value)).ToList();
             return FilterTask(list, filters);
+        }
+
+        object GetColumnOverview(List<TaskEntity> tasks, string columnName)
+        {
+            var prop = typeof(TaskEntity).GetProperty(columnName);
+            var result = new Dictionary<string, object>();
+            var list = tasks
+                .GroupBy(t => prop.GetValue(t))
+                .Select(t => new { Name = t.Key.ToString(), Count = t.Count() })
+                .ToList();
+            return list;
         }
     }
 }
