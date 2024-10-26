@@ -85,6 +85,7 @@ html, body {
   font-family: 'JetBrains Mono', monospace;
   padding: 15px;
   width: 100%;
+  border: none;
   font-size: 16px;
   border-radius: 10px;
   background-color: rgb(15, 190, 175);
