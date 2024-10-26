@@ -25,6 +25,10 @@ const Constructor = () => {
     setSelectedPreset(selected?.label || null);
   };
 
+  const handleNewTemplateClick = () => {
+    navigate("/constructor/new");
+  };
+
   const handleFormSubmission = (days: number) => {
     if (selectedPreset) {
       const requestBody = {
@@ -66,7 +70,7 @@ const Constructor = () => {
             </button>
           ))}
         </div>
-        <button className="create-filter-button">Новый шаблон</button>
+        <button className="create-filter-button" onClick={handleNewTemplateClick}>Новый шаблон</button>
         <button
           className="apply-button"
           onClick={() => setShowModal(true)}

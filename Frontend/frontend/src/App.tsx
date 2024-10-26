@@ -4,6 +4,7 @@ import MainPage from './pages/MainPage';
 import NoPage from './pages/NoPage';
 import ConstructorPage from './pages/ConstructorPage';
 import DashBoardPage from './pages/DashBoardPage';
+import NewConstructorPage from './pages/NewConstructorPage';
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
               <Route path='*' element={<NoPage />} />
               <Route path='/constructor' element={<ConstructorPage />} />
               <Route path='/dashboard' element={<DashBoardPage />} />
+              <Route path='/constructor/new' element={<NewConstructorPage/>}/>
             </Routes>
           </BrowserRouter>
     </div>
