@@ -56,6 +56,7 @@ html, body {
   background-color: #e0e0e0;
   border-radius: 10px;
   width: 100%; 
+  margin-bottom: 20px;
   height: 150px;
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
@@ -77,7 +78,14 @@ html, body {
   color: #333;
   font-size: 16px;
 }
-
+.slider-content{
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.slider-content input{
+  margin-left: 10px;
+}
 .bold {
   font-weight: 600;
   font-size: 17px;
@@ -92,7 +100,7 @@ html, body {
   color: #333;
   border-radius: 5px;
   padding: 10px;
-  margin-top: 20px;
+  margin-bottom: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   box-sizing: border-box;
