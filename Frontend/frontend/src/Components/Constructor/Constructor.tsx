@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./Constructor.css";
 import TimeFilterModal from "./TimeFilterModal"; // импортируем модальное окно
+import { useNavigate } from "react-router";
 
 const Constructor = () => {
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
@@ -17,6 +18,8 @@ const Constructor = () => {
     { id: 8, label: "Сравнительный анализ задач" },
   ];
 
+  const navigate = useNavigate();
+
   const handlePresetSelect = (presetId: number) => {
     const selected = presets.find((preset) => preset.id === presetId);
     setSelectedPreset(selected?.label || null);
@@ -24,17 +27,23 @@ const Constructor = () => {
 
   const handleFormSubmission = (days: number) => {
     if (selectedPreset) {
-      fetch("http://localhost:5249/api/filter", {
+      const requestBody = {
+        "days": days,
+        'filters': [],
+        'column': "Status",
+      };
+      requestBody.days = days;
+      requestBody.column = "Status";
+      fetch("http://localhost:5249/tasks/filterset", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ preset: selectedPreset, days }),
+        body: JSON.stringify(requestBody),
       })
         .then((response) => response.json())
-        .then(() => {
-          alert("Отчет успешно создан");
-          window.location.href = "/reports";
+        .then((d) => {
+          navigate("/dashboard", {state: {data: d}})
         })
         .catch((error) => {
           console.error("Ошибка создания отчета:", error);

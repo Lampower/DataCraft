@@ -1,48 +1,67 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+  background-color: #2e2e2e;
+  color: #e0e0e0;
+}
+
 .dashboard {
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  background-color: #2d2d2d;
-  color: white;
+  align-items: center;
+  padding: 40px;
+  min-height: 100vh;
 }
 
 .dashboard h1 {
-  text-align: center;
-  margin-bottom: 40px;
-  color: #fff;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #e0e0e0;
 }
 
 .dashboard-charts {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
 }
 
 .chart {
-  background-color: #333;
+  background-color: #3a3a3a;
+  border-radius: 15px;
   padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.pie-chart, .line-chart, .bar-chart {
-  flex: 1;
-  min-width: 300px;
-  margin-right: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .chart h3 {
-  text-align: center;
-  color: #fff;
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #e0e0e0;
 }
-.finish-button-center{
+
+.pie-chart, .line-chart, .bar-chart {
   display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 10px 20px;
-  margin-bottom: 20px;
-  width: 15%;
-  align-self: center;
-  color:#fff;
+}
+
+.finish-button-center {
+  margin-top: 40px;
+  padding: 12px 25px;
   background-color: rgb(15, 190, 175);
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.finish-button-center:hover {
+  background-color: rgb(245, 182, 56);
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
