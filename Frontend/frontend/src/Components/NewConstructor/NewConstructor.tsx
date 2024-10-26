@@ -13,6 +13,7 @@ const NewConstructor = () => {
   const [filters, setFilters] = useState<{ field: string, value: string }[]>([]);
   const [templateName, setTemplateName] = useState("");
   const [showChooseFiltersModal, setShowChooseFiltersModal] = useState(false);
+  const navigate = useNavigate();
 
   const handleColumnClick = (column: string) => {
     if (activeColumns.includes(column)) {
@@ -42,21 +43,45 @@ const NewConstructor = () => {
  
 
   const handleModalSubmit = (selectedColumns: string[]) => {
-    const requestBody = {
-      patternName: templateName,
-      patternFilter: JSON.stringify({
-        days: days,
-        filters: filters,
-        columns: selectedColumns,
-      }),
-    };
-    console.log(requestBody);
+    const patternFilterStr = JSON.stringify({
+      days: days,
+      filters: filters,
+      columns: selectedColumns,
+    });
+
+    checkPattern(templateName, patternFilterStr)
+    .then(e => { if (!e) savePattern(templateName, patternFilterStr) })
+    
+    let d;
+    fillByFetch(d, 0, 100, {
+      days: days,
+      filters: filters,
+      columns: selectedColumns,
+    });
+    setShowChooseFiltersModal(false);
+  };
+
+  const checkPattern = async (patternName, patternFilter) => {
+    const response = await fetch("http://localhost:5249/pattern");
+    const data = await response.json();
+    let exists = false;
+    data.forEach(pattern => {
+      if (pattern.patternFilter == patternFilter)
+      {
+        exists = true;
+        return;
+      }
+    });
+    return exists
+  }
+
+  const savePattern = (patternName, patternFilter) => {
     fetch("http://localhost:5249/pattern", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(requestBody),
+      body: JSON.stringify({"patternName": patternName, "patternFilter": patternFilter}),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -65,8 +90,45 @@ const NewConstructor = () => {
       .catch((error) => {
         console.error("Ошибка при сохранении шаблона:", error);
       });
-    setShowChooseFiltersModal(false);
-  };
+  }
+
+  const fillByFetch = (data, from, amount, filter) => {
+    fetch(`http://localhost:5249/tasks/filterset?from=${from}&amount=${amount}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(filter),
+    })
+      .then((response) => response.json())
+      .then((d) => {
+        if (data == null)
+        {
+          data = d;
+          return fillByFetch(data, from + amount, amount, filter);
+        }
+          
+        var isExiting = true;
+        var keys = Object.keys(d)
+        keys.forEach(key => {
+          data[key].entities = [...data[key].entities, ...d[key].entities]
+          if (data[key].entities.length < data[key].totalLength)
+            isExiting = false;
+        });
+        if (isExiting)
+        {
+          navigate("/dashboard", {state: {data: data}})
+          return;
+        }
+        else
+        {
+          return fillByFetch(data, from + amount, amount, filter)
+        }
+      })
+      .catch((error) => {
+        console.error("Ошибка создания отчета:", error);
+      });
+  }
 
   const handleFilterSelect = (column: string, value: string) => {
     setFilters((prevFilters) => {
@@ -75,6 +137,10 @@ const NewConstructor = () => {
       return updatedFilters;
     });
   };
+
+  const handleForm = () => {
+
+  }
 
  
 
@@ -134,7 +200,7 @@ const NewConstructor = () => {
         </div>
         <button
           className="create-report-button"
-          onClick={() => setShowChooseFiltersModal(true)}
+          onClick={() => {setShowChooseFiltersModal(true)}}
           disabled={(days === null || filters.length === 0)}
         >
           Сформировать

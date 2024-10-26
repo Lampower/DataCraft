@@ -9,13 +9,13 @@ const Constructor = () => {
 
   const presets = [
     { id: 1, label: "Общий статус задач за период", filter: { days: 30, filters: [], columns: ["Status"], } },
-    { id: 2, label: "Работа с владельцами задач" },
-    { id: 3, label: "Проекты и оценка времени" },
-    { id: 4, label: "Спринты и завершение задач" },
-    { id: 5, label: "Пространство и тип задачи" },
-    { id: 6, label: "Состояние и работа с приоритетами" },
-    { id: 7, label: "Эффективность работы команд" },
-    { id: 8, label: "Сравнительный анализ задач" },
+    { id: 2, label: "Работа с владельцами задач", filter: { days: 30, filters: [], columns: ["Status"], } },
+    { id: 3, label: "Проекты и оценка времени", filter: { days: 30, filters: [], columns: ["Status"], } },
+    { id: 4, label: "Спринты и завершение задач", filter: { days: 30, filters: [], columns: ["Status"], } },
+    { id: 5, label: "Пространство и тип задачи", filter: { days: 30, filters: [], columns: ["Status"], } },
+    { id: 6, label: "Состояние и работа с приоритетами", filter: { days: 30, filters: [], columns: ["Status"], } },
+    { id: 7, label: "Эффективность работы команд", filter: { days: 30, filters: [], columns: ["Status"], } },
+    { id: 8, label: "Сравнительный анализ задач", filter: { days: 30, filters: [], columns: ["Status"], } },
   ];
 
   const navigate = useNavigate();
