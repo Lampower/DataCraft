@@ -15,13 +15,16 @@ namespace Backend.Controllers
         public TaskController(DatabaseContext context) => this.context = context;
 
         [HttpGet]
-        public IActionResult Get(string column)
+        public IActionResult Get(string column, int from = 0, int amount = 100)
         {
             var names = context.Tasks.ToList()
                 .Select(t => SelectColumn(t, column))
                 .Distinct()
                 .ToList();
-            return Ok(names);
+            var pag = new PaginatedList<object?>();
+            pag.TotalLength = names.Count;
+            pag.Entities = names.Skip(from).Take(amount).ToList(); 
+            return Ok(pag);
         }
         /// <summary>
         /// Can take no more than 100 objects.
