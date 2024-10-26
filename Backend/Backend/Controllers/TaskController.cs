@@ -77,7 +77,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost("filterset")]
-        public IActionResult FilterAndCount([FromBody] DiagramRequestDto dto)
+        public IActionResult FilterAndCount([FromBody] DiagramRequestDto dto, int from = 0, int amount = 100)
         {
             var date = DateTime.Now.AddDays(-dto.Days);
             var tasks = context.Tasks
@@ -85,7 +85,10 @@ namespace Backend.Controllers
             tasks = FilterTask(tasks, dto.Filters);
 
             var hashSet = GetColumnOverview(tasks, dto.Column);
-            return Ok(hashSet);
+            var pagHashSet = new PaginatedList<HashKeyDto>();
+            pagHashSet.TotalLength = hashSet.Count;
+            pagHashSet.Entities = hashSet.Skip(from).Take(amount).ToList();
+            return Ok(pagHashSet);
         }
 
         object? SelectColumn(object field, string ColumnName)
@@ -152,13 +155,13 @@ namespace Backend.Controllers
             return FilterTask(list, filters);
         }
 
-        object GetColumnOverview(List<TaskEntity> tasks, string columnName)
+        List<HashKeyDto> GetColumnOverview(List<TaskEntity> tasks, string columnName)
         {
             var prop = typeof(TaskEntity).GetProperty(columnName);
             var result = new Dictionary<string, object>();
             var list = tasks
                 .GroupBy(t => prop.GetValue(t))
-                .Select(t => new { Name = t.Key.ToString(), Count = t.Count() })
+                .Select(t => new HashKeyDto { Name = t.Key.ToString(), Count = t.Count() })
                 .ToList();
             return list;
         }
