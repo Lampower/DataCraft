@@ -87,10 +87,16 @@ html, body {
   width: 100%;
   font-size: 16px;
   border-radius: 10px;
-  background-color: rgb(245, 182, 56);
+  background-color: rgb(15, 190, 175);
   color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+.create-report-button:hover{
+  background-color: rgb(245, 182, 56);
   transform: scale(1.05);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 .time-filter-container{
   max-width: 260px;
