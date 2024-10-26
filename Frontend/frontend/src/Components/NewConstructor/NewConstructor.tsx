@@ -11,6 +11,7 @@ const NewConstructor = () => {
   const [dataColumns, setDataColumns] = useState<{ [key: string]: any[] }>({});
   const [activeColumns, setActiveColumns] = useState<string[]>([]);
   const [filters, setFilters] = useState<{ field: string, value: string }[]>([]);
+  const [templateName, setTemplateName] = useState("");
   const [showChooseFiltersModal, setShowChooseFiltersModal] = useState(false);
 
   const handleColumnClick = (column: string) => {
@@ -26,10 +27,11 @@ const NewConstructor = () => {
       fetch(`http://localhost:5249/tasks?column=${column}`)
         .then((response) => response.json())
         .then((data) => {
+          console.log(data);
           setActiveColumns((prevActiveColumns) => [...prevActiveColumns, column]);
           setDataColumns((prevDataColumns) => ({
             ...prevDataColumns,
-            [column]: data,
+            [column]: data.entities,
           }));
         })
         .catch((error) => {
@@ -41,11 +43,28 @@ const NewConstructor = () => {
 
   const handleModalSubmit = (selectedColumns: string[]) => {
     const requestBody = {
-      days: days,
-      filters: filters,
-      column: selectedColumns,
+      patternName: templateName,
+      patternFilter: JSON.stringify({
+        days: days,
+        filters: filters,
+        columns: selectedColumns,
+      }),
     };
     console.log(requestBody);
+    fetch("http://localhost:5249/pattern", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Шаблон сохранен:", data);
+      })
+      .catch((error) => {
+        console.error("Ошибка при сохранении шаблона:", error);
+      });
     setShowChooseFiltersModal(false);
   };
 
@@ -93,6 +112,16 @@ const NewConstructor = () => {
       </div>
 
       <div className="column">
+      <div className="template-name-container">
+          <h3>Название шаблона</h3>
+          <input
+            type="text"
+            value={templateName}
+            onChange={(e) => setTemplateName(e.target.value)}
+            className="template-name-input"
+            placeholder="Введите название шаблона"
+          />
+        </div>
         <div className="time-filter-container">
           <h3>Выберите период для отчета (дни)</h3>
           <input
@@ -120,7 +149,7 @@ const NewConstructor = () => {
         onClose={() => setShowChooseFiltersModal(false)}
         onSubmit={(selectedFields) => {
             console.log('Выбранные фильтры:', selectedFields);
-            setShowChooseFiltersModal(false);
+            handleModalSubmit(selectedFields);
         }}
     />
 )}

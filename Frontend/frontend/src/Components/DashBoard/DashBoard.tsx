@@ -6,10 +6,16 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const Dashboard = () => {
   const location = useLocation();
-  const data = location.state?.data;
-  console.log(data);
+  const data = location.state?.data || [];
+
+  if (!Array.isArray(data)) {
+    console.error("Expected 'data' to be an array, but got:", typeof data);
+    return <div className="dashboard">Неверный формат данных</div>;
+  }
+
   let sum = 0;
-  data.map((entity) => {sum += entity.count});
+  data.forEach((entity) => { sum += entity.count });
+
   return (
     <div className="dashboard">
       <h1 className="title">Дэшборд отчета: {"selectedPreset"}</h1>
@@ -37,6 +43,7 @@ const Dashboard = () => {
           </div>
         )}
 
+        {/* Если у вас есть данные для BarChart и LineChart, они могут быть представлены следующим образом */}
         {data.barData && (
           <div className="chart-container">
             <h3>Распределение задач по приоритетам</h3>
