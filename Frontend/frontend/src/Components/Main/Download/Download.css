@@ -1,130 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
 .download-modal {
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100vh;
+  background-color: #2e2e2e;
 }
 
 .modal-content {
   display: flex;
-  align-self: center;
   flex-direction: column;
   align-items: center;
-  margin-top: 50px;
-  padding: 10px;
-  border-radius: 3px;
-  background-color: transparent;
-  border: 1px solid rgb(134,134,134);
-  height: 500px;
-  width: 520px;
+  padding: 30px;
+  border-radius: 20px;
+  background-color: #3a3a3a;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: #e0e0e0;
+  width: 650px;
 }
-.download-modal-header{
-  display: flex;
-  width: 80%;
-  font-size: 16px;
-  margin-top: 10px;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 0px 0px 15px 0px;
-  color: rgb(228, 228, 228);
-  font-weight: 700;
+
+.download-modal-header {
+  width: 100%;
+  font-size: 18px;
+  color: #e4e4e4;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
-.close{
-  display: flex;
+
+.close {
   align-self: flex-end;
   border: none;
   cursor: pointer;
-  background-color: rgb(255, 255, 255);
+  background-color: transparent;
+  color: #e0e0e0;
 }
-.download-modal-sub{
-  display: flex;
-  width: 80%;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 0px 0px 20px 0px;
-  color: rgb(134,134,134);
+
+.download-modal-sub {
+  width: 100%;
+  color: #868686;
+  margin-bottom: 20px;
 }
+
 .upload-area {
   display: flex;
   flex-direction: column;
-  background-color: rgb(255, 255, 255);
-  border: 5px;
-  width: 72%;
-  height: 30%;
-  border-radius: 5px;
-  padding: 20px;
-  margin: 20px 0;
+  align-items: center;
+  justify-content: center;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  width: 100%; 
+  height: 150px;
   cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
+
+.upload-area:hover {
+  background-color: rgb(245, 182, 56);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+}
+
 .file-icon {
-  align-self: center;
-  color: aliceblue;
+  color: #3a3a3a;
+  font-size: 24px;
 }
-.desc{
-  display: flex;
-  align-self: center;
+
+.desc {
   text-align: center;
-  flex-direction: column;
-  width: 55%;
+  color: #333;
   font-size: 16px;
-  color:rgb(0, 0, 0);
 }
-.bold{
+
+.bold {
   font-weight: 600;
   font-size: 17px;
 }
 
 .file-name {
+  position: relative; /* Относительное позиционирование для установки крестика */
   display: flex;
-  align-self: center;
-  text-align: center;
   align-items: center;
-  justify-content: space-between;
-  height: 60px;
-  width: 80%;
-  font-size: 16px;
-  font-family: sans-serif;
-  background-color: rgb(255, 255, 255);
+  width: 100%;
+  background-color: rgb(230, 230, 230);
+  color: #333;
   border-radius: 5px;
-  color:rgb(0, 0, 0);
-  margin-bottom: 20px;
+  padding: 10px;
+  margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-.wrap{
-  display: flex;
-  flex-direction: row;
+
+.file-name span {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  max-width: calc(100% - 40px); 
+  padding: 0 10px; 
+  box-sizing: border-box;
 }
-.column{
+
+.wrap {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.column {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin-left: 20px;
+  margin-left: 10px;
 }
-.cancel{
+
+.cancel {
+  position: absolute; 
+  top: 5px;
+  right: 5px;
   border: none;
-  cursor: pointer;
   background-color: transparent;
+  cursor: pointer;
 }
-.error-message{
-  color:rgb(255, 255, 255);
+.error-message {
+  color: #ff4d4d;
 }
 
 .update-button {
-  display: flex;
-  justify-content: center;
-  margin-top: auto;
-  margin-bottom: 20px;
-  align-items: center;
-  height: 40px;
-  width: 80%;
-  padding: 25px;
-  border: 1px solid transparent;
-  border-radius: 5px;
-  color: rgba(255, 255, 255, 1);
+  width: 100%; 
+  padding: 12px;
   background-color: rgb(15, 190, 175);
+  color: #fff;
   font-size: 16px;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  font-family: 'JetBrains Mono', monospace;
 }
 
-
-
-
+.update-button:hover {
+  background-color: rgb(245, 182, 56);
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}

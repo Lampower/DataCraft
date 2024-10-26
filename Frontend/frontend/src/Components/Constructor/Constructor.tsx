@@ -1,108 +1,78 @@
-import React, { useState } from 'react';
-import './Constructor.css';
+import React, { useState } from "react";
+import "./Constructor.css";
+import TimeFilterModal from "./TimeFilterModal"; // импортируем модальное окно
 
 const Constructor = () => {
-  const [isForming, setIsForming] = useState(false);
-  
-  const presetColors = ['rgb(190, 15, 15)', 'rgb(15, 190, 175)', 'rgb(245, 182, 56)'];
+  const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
-  const [filters, setFilters] = useState([
-    {
-      id: 1,
-      options: [
-        { text: 'Вариант 1', color: presetColors[0] },
-        { text: 'Вариант 2', color: presetColors[1] },
-        { text: 'Вариант 3', color: presetColors[2] },
-      ],
-      selected: null,
-    },
-  ]);
+  const presets = [
+    { id: 1, label: "Общий статус задач за период" },
+    { id: 2, label: "Работа с владельцами задач" },
+    { id: 3, label: "Проекты и оценка времени" },
+    { id: 4, label: "Спринты и завершение задач" },
+    { id: 5, label: "Пространство и тип задачи" },
+    { id: 6, label: "Состояние и работа с приоритетами" },
+    { id: 7, label: "Эффективность работы команд" },
+    { id: 8, label: "Сравнительный анализ задач" },
+  ];
 
-  const handleStartForming = () => {
-    setIsForming(true);
+  const handlePresetSelect = (presetId: number) => {
+    const selected = presets.find((preset) => preset.id === presetId);
+    setSelectedPreset(selected?.label || null);
   };
 
-  const handleOptionClick = (filterId, option) => {
-    const updatedFilters = filters.map((filter) => {
-      if (filter.id === filterId) {
-        return { ...filter, selected: option }; 
-      }
-      if (filter.id === filterId + 1) {
-        
-        return {
-          ...filter,
-          options: generateNewOptionsBasedOnPrevious(option),
-          selected: null, 
-        };
-      }
-      return filter;
-    });
-
-    if (!filters.find((filter) => filter.id === filterId + 1)) {
-      updatedFilters.push({
-        id: filterId + 1,
-        options: generateNewOptionsBasedOnPrevious(option),
-        selected: null,
-      });
-    }
-
-    setFilters(updatedFilters.slice(0, filterId + 2));
-  };
-
-  
-  const generateNewOptionsBasedOnPrevious = (selectedOption) => {
-    if (selectedOption.text === 'Вариант 1') {
-      return [
-        { text: 'Новое значение 1.1', color: 'rgb(190, 15, 15)' },
-        { text: 'Новое значение 1.2', color: 'rgb(245, 182, 56)' },
-        { text: 'Новое значение 1.3', color: 'rgb(245, 182, 56)' },
-      ];
-    } else if (selectedOption.text === 'Вариант 2') {
-      return [
-        { text: 'Новое значение 2.1', color: 'rgb(190, 15, 15)' },
-        { text: 'Новое значение 2.2', color: 'rgb(15, 190, 175)' },
-        { text: 'Новое значение 2.3', color: 'rgb(245, 182, 56)' },
-      ];
-    } else {
-      return [
-        { text: 'Новое значение 3.1', color: 'rgb(190, 15, 15)' },
-        { text: 'Новое значение 3.2', color: 'rgb(15, 190, 175)' },
-        { text: 'Новое значение 3.3', color: 'rgb(245, 182, 56)' },
-      ];
+  const handleFormSubmission = (days: number) => {
+    if (selectedPreset) {
+      fetch("http://localhost:5249/api/filter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ preset: selectedPreset, days }),
+      })
+        .then((response) => response.json())
+        .then(() => {
+          alert("Отчет успешно создан");
+          window.location.href = "/reports";
+        })
+        .catch((error) => {
+          console.error("Ошибка создания отчета:", error);
+        });
     }
   };
 
   return (
-    <div className="constructor">
-      <button className="start-button" onClick={handleStartForming}>
-        Начать формирование
-      </button>
-
-      {isForming && (
-        <div className="filters-container">
-          {filters.map((filter) => (
-            <div key={filter.id} className="filter">
-              <ul className="filter-options">
-                {filter.options.map((option) => (
-                  <li
-                    key={option.text}
-                    className="filter-option"
-                    style={{
-                      backgroundColor: filter.selected === option ? option.color : '',
-                    }}
-                    onClick={() => handleOptionClick(filter.id, option)}
-                  >
-                    {option.text}
-                  </li>
-                ))}
-              </ul>
-            </div>
+    <div className="container-wrapper">
+      <div className="constructor">
+        <h1 className="title">Готовые шаблоны</h1>
+        <div className="presets">
+          {presets.map((preset) => (
+            <button
+              key={preset.id}
+              onClick={() => handlePresetSelect(preset.id)}
+              className={`preset-button ${selectedPreset === preset.label ? "selected" : ""}`}
+            >
+              {preset.label}
+            </button>
           ))}
         </div>
+        <button className="create-filter-button">Новый шаблон</button>
+        <button
+          className="apply-button"
+          onClick={() => setShowModal(true)}
+          disabled={!selectedPreset}
+        >
+          Создать отчет
+        </button>
+      </div>
+
+      {showModal && (
+        <TimeFilterModal 
+          onClose={() => setShowModal(false)}
+          onSubmit={handleFormSubmission}
+        />
       )}
-      <button className="finish-button" >
-        Загрузить
-      </button>
     </div>
   );
 };

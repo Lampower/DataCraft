@@ -12,12 +12,12 @@ const Download = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
-      if (selectedFile.name.endsWith(".csv")) {  
+      if (selectedFile.name.endsWith(".xlsx")) {  
         setFile(selectedFile);
         setError(null); 
       } else {
         setFile(null);
-        setError("Пожалуйста, загрузите файл в формате .csv");
+        setError("Пожалуйста, загрузите файл в формате .xlsx");
       }
     }
   };
@@ -27,12 +27,12 @@ const Download = () => {
     setDragging(false);
     const selectedFile = event.dataTransfer.files[0];
     if (selectedFile) {
-      if (selectedFile.name.endsWith(".csv")) {  
+      if (selectedFile.name.endsWith(".xlsx")) {  
         setFile(selectedFile);
         setError(null);  
       } else {
         setFile(null);
-        setError("Пожалуйста, загрузите файл в формате .csv");
+        setError("Пожалуйста, загрузите файл в формате .xlsx");
       }
     }
   };
@@ -51,6 +51,39 @@ const Download = () => {
     setError(null); 
     if (fileInputRef.current) {
       fileInputRef.current.value = ''; 
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!file) {
+      setError("Выберите файл перед загрузкой");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file, file.name);
+
+    try {
+      const response = await fetch("http://localhost:5249/tasks/loadTask", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "*/*",
+        },
+      });
+
+      if (response.ok) {
+        alert("Файл успешно загружен");
+        setTimeout(() => {
+          window.location.href = "/constructor";
+        }, 300);
+        setFile(null);
+      } else {
+        setError("Ошибка при загрузке файла");
+      }
+    } catch (error) {
+      console.error("Ошибка при загрузке:", error);
+      setError("Ошибка при загрузке файла");
     }
   };
 
@@ -91,7 +124,7 @@ const Download = () => {
             type="file"
             id="fileInput"
             ref={fileInputRef} 
-            accept=".csv"
+            accept=".xlsx"
             style={{ display: 'none' }}
             onChange={handleFileChange}
           />
@@ -113,7 +146,9 @@ const Download = () => {
           </div>
         )}
 
-        <button className="update-button">Загрузить</button>
+        <button className="update-button" onClick={handleUpload}>
+          Загрузить
+        </button>
       </div>
     </div>
   );
