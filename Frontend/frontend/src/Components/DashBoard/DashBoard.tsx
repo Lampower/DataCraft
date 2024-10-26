@@ -19,14 +19,12 @@ const Dashboard = () => {
         <div className="chart-container">
           <h3>Процентное распределение</h3>
           <h3>Всего проектов: {sum}</h3>
-          <PieChart width={700} height={700}>
+          <PieChart width={300} height={300}>
               <Pie
                   data={data[key].entities}
                   cx="50%"
                   cy="50%"
-                  // labelLine={false}
-                  // label={renderCustomizedLabel}
-                  outerRadius={350}
+                  outerRadius={150}
                   fill="#8884d8"
                   dataKey="count"
               >
@@ -44,7 +42,7 @@ const Dashboard = () => {
     return <>{data && (
         <div className="chart-container">
           <h3>Распределение задач по приоритетам</h3>
-          <BarChart width={500} height={300} data={data[key].entities}>
+          <BarChart width={350} height={300} data={data[key].entities}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />
@@ -60,7 +58,7 @@ const Dashboard = () => {
     return <>{data && (
         <div className="chart-container">
           <h3>Динамика выполнения задач</h3>
-          <LineChart width={500} height={300} data={data[key].entities}>
+          <LineChart width={350} height={300} data={data[key].entities}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" />
             <YAxis />
