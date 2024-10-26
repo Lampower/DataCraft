@@ -18,14 +18,14 @@ const Dashboard = () => {
           <div className="chart-container">
             <h3>Процентное распределение</h3>
             <h3>Всего проектов: {sum}</h3>
-            <PieChart width={400} height={400}>
+            <PieChart width={600} height={600}>
               <Pie
                 data={data}
                 dataKey="count"
                 name='name'
                 cx="50%"
                 cy="50%"
-                outerRadius={150}
+                outerRadius={250}
                 fill="#8884d8"
                 label
               >
