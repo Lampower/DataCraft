@@ -4,11 +4,11 @@ import TimeFilterModal from "./TimeFilterModal"; // импортируем мо�
 import { useNavigate } from "react-router";
 
 const Constructor = () => {
-  const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
+  const [selectedPreset, setSelectedPreset] = useState<any | null>(null);
   const [showModal, setShowModal] = useState(false);
 
   const presets = [
-    { id: 1, label: "Общий статус задач за период" },
+    { id: 1, label: "Общий статус задач за период", filter: { days: 30, filters: [], columns: ["Status"], } },
     { id: 2, label: "Работа с владельцами задач" },
     { id: 3, label: "Проекты и оценка времени" },
     { id: 4, label: "Спринты и завершение задач" },
@@ -22,34 +22,53 @@ const Constructor = () => {
 
   const handlePresetSelect = (presetId: number) => {
     const selected = presets.find((preset) => preset.id === presetId);
-    setSelectedPreset(selected?.label || null);
+    setSelectedPreset(selected || null);
   };
 
-  const handleFormSubmission = (days: number) => {
+  const handleFormSubmission = () => {
     if (selectedPreset) {
-      const requestBody = {
-        "days": days,
-        'filters': [],
-        'column': "Status",
-      };
-      requestBody.days = days;
-      requestBody.column = "Status";
-      fetch("http://localhost:5249/tasks/filterset", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      })
-        .then((response) => response.json())
-        .then((d) => {
-          navigate("/dashboard", {state: {data: d}})
-        })
-        .catch((error) => {
-          console.error("Ошибка создания отчета:", error);
-        });
+      let d;
+      console.log(selectedPreset)
+      fillByFetch(d, 0, 100);
     }
   };
+  const fillByFetch = (data, from, amount) => {
+    fetch(`http://localhost:5249/tasks/filterset?from=${from}&amount=${amount}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(selectedPreset.filter),
+    })
+      .then((response) => response.json())
+      .then((d) => {
+        if (data == null)
+        {
+          data = d;
+          return fillByFetch(data, from + amount, amount);
+        }
+          
+        var isExiting = true;
+        var keys = Object.keys(d)
+        keys.forEach(key => {
+          data[key].entities = [...data[key].entities, ...d[key].entities]
+          if (data[key].entities.length < data[key].totalLength)
+            isExiting = false;
+        });
+        if (isExiting)
+        {
+          navigate("/dashboard", {state: {data: data}})
+          return;
+        }
+        else
+        {
+          return fillByFetch(data, from + amount, amount)
+        }
+      })
+      .catch((error) => {
+        console.error("Ошибка создания отчета:", error);
+      });
+  }
 
   return (
     <div className="container-wrapper">
@@ -60,7 +79,7 @@ const Constructor = () => {
             <button
               key={preset.id}
               onClick={() => handlePresetSelect(preset.id)}
-              className={`preset-button ${selectedPreset === preset.label ? "selected" : ""}`}
+              className={`preset-button ${selectedPreset?.label === preset.label ? "selected" : ""}`}
             >
               {preset.label}
             </button>
