@@ -77,7 +77,15 @@ html, body {
   color: #333;
   font-size: 16px;
 }
-
+.slider-content{
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.slider-content input{
+  margin-left: 10px;
+}
 .bold {
   font-weight: 600;
   font-size: 17px;
