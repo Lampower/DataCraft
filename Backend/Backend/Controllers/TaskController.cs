@@ -41,6 +41,18 @@ namespace Backend.Controllers
             return Ok(pagTasks);
         }
 
+        [HttpGet("names")]
+        public IActionResult GetTableNames()
+        {
+            List<string> names = new List<string>();
+            var props = typeof(TaskEntity).GetProperties();
+            foreach (var prop in props)
+            {
+                names.Add(prop.Name);
+            }
+            return Ok(names);
+        }
+
         [HttpPost("time")]
         public IActionResult GetTime(int from = 0, int amount = 100, int days = 30)
         {
