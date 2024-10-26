@@ -22,23 +22,60 @@ html, body {
 }
 
 .dashboard-charts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-  width: 100%;
-  max-width: 1200px;
-}
-.chart-container{
   display: flex;
   justify-content: center;
   flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1800px;
 }
-
+.chart-container{
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+.chart-container p{
+  display: flex;
+  margin-top: auto;
+  align-self: flex-end;
+}
 .chart {
   background-color: #3a3a3a;
   border-radius: 15px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.row{
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 30px;
+}
+.chart-legend{
+  display: flex;
+  flex-direction: column;
+  margin-left: 170px;
+}
+.chart-container p{
+  display: flex;
+  align-self: flex-start;
+  text-align: left;
+  width: 60%;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 10%;
+  margin-right: 10px;
+}
+
+.legend-label {
+  font-size: 16px;
 }
 
 .chart h3 {
@@ -52,7 +89,27 @@ html, body {
   align-items: center;
   justify-content: center;
 }
-
+.export-button{
+  padding: 15px 40px;
+  margin-bottom: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+  cursor: pointer;
+  background-color: #e0e0e0;
+  color: #333;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+.export-buttons{
+  display: flex;
+  margin-top: 20px;
+}
+.export-button:hover{
+  background-color: rgb(245, 182, 56);
+  color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 .finish-button-center {
   margin-top: 40px;
   padding: 12px 25px;
@@ -72,5 +129,7 @@ html, body {
 }
 .rechars-wrapper{
   display: flex;
-  align-items: center;
+  margin-top: auto;
+  align-items: flex-end;
+  align-self: flex-end;
 }
