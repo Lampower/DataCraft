@@ -63,7 +63,6 @@ const Dashboard = () => {
         {data && data[key] && data[key].entities && data[key].entities.length > 0 ? (
           <BarChart width={400} height={400} data={data[key].entities}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
             <Legend />

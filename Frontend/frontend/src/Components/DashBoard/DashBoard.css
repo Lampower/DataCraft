@@ -53,6 +53,9 @@ html, body {
 .chart-legend{
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+  max-height: 700px;
+  width: 70%;
   margin-left: 170px;
   margin-top: 45px;
 }
@@ -65,12 +68,13 @@ html, body {
 .legend-item {
   display: flex;
   align-items: center;
+  width: 30%;
   margin-bottom: 10px;
 }
 
 .legend-color {
-  width: 20px;
-  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
   border-radius: 10%;
   margin-right: 10px;
 }
@@ -133,4 +137,7 @@ html, body {
   margin-top: auto;
   align-items: flex-end;
   align-self: flex-end;
+}
+.rechars-cartesian-axis{
+  display: none;
 }
