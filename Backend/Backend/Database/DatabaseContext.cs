@@ -7,6 +7,7 @@ namespace Backend.Database
     {
         public DbSet<TaskEntity> Tasks { get; set; }
         public DbSet<HistoryEntity> Histories { get; set; }
+        public DbSet<PatternEntity> Patterns { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

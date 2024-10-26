@@ -33,7 +33,7 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider.GetService<DatabaseContext>();
     if (context == null)
         throw new Exception("Error at getting db context");
-    //DbInitializer.Drop(context);
+   // DbInitializer.Drop(context);
     DbInitializer.Initialize(context);
 }
 
