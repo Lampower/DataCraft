@@ -83,7 +83,7 @@ const Dashboard = () => {
         <h3>Распределение задач по приоритетам</h3>
         {data && data[key] && data[key].entities && data[key].entities.length > 0 ? (
           <>
-            <BarChart width={400} height={400} data={data[key].entities}>
+            <BarChart width={400} height={400} data={data[key].entities} dataKey="value">
               <CartesianGrid strokeDasharray="3 3" />
               <YAxis />
               <Tooltip />

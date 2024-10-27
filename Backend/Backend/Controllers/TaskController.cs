@@ -172,7 +172,7 @@ namespace Backend.Controllers
             filters.Remove(filter);
 
             var l = list.Where(el => el[filter.Field] == filter.Value).ToList();
-            return FilterTask(list, filters);
+            return FilterTask(l, filters);
         }
 
         List<Dictionary<string, string>> GetAsDictionaryByRows()

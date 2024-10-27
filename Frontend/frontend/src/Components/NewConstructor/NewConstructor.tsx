@@ -50,15 +50,7 @@ const NewConstructor = () => {
       columns: selectedColumns,
     });
 
-    const loadNames = async () => {
-      const res = await fetch("http://localhost:5249/tasks/names");
-      const data = await res.json();
-      setColumns(data);
-    }
-
-    useEffect(() => {
-      loadNames();
-    }, [])
+    
 
     checkPattern(nameToSave, patternFilterStr)
       .then(e => { if (!e) savePattern(nameToSave, patternFilterStr) });
@@ -136,6 +128,16 @@ const NewConstructor = () => {
       return updatedFilters;
     });
   };
+
+  const loadNames = async () => {
+    const res = await fetch("http://localhost:5249/tasks/names");
+    const data = await res.json();
+    setColumns(data);
+  }
+
+  useEffect(() => {
+    loadNames();
+  }, [])
 
   return (
     <div className="new-constructor-container">
