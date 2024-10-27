@@ -1,3 +1,4 @@
+using Backend.Common.Services;
 using Backend.Database;
 using System.Reflection;
 
@@ -22,6 +23,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DatabaseContext>();
+builder.Services.AddScoped<CSVParserToDb>();
 
 // Create init to services
 
