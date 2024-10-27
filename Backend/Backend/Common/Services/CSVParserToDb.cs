@@ -22,7 +22,8 @@ namespace Backend.Common.Services
             var path = Path.Combine(Directory.GetCurrentDirectory(), "file.csv");
             var streamToWrite = File.Open(path, FileMode.OpenOrCreate);
             var ws = new StreamWriter(streamToWrite);
-            var rs = new StreamReader(stream);
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            var rs = new StreamReader(stream, Encoding.GetEncoding("windows-1251"));
             if (rs == null) return null;
             
             var row1 = rs.ReadLine().Split(";");
