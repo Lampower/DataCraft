@@ -12,7 +12,7 @@ using System.Globalization;
 namespace Backend.Controllers
 {
     [Route("/tasks")]
-    public class TaskController: ControllerBase
+    public class TaskController : ControllerBase
     {
         DatabaseContext context;
         private readonly CSVParserToDb parser;
@@ -43,10 +43,10 @@ namespace Backend.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult GetFiltered([FromBody] List<FilterDto> filters, int from = 0, int amount = 100)
         {
-            if (amount > 100) amount = 100; 
+            if (amount > 100) amount = 100;
 
             var tasks = GetAsDictionaryByRows();
-            
+
             tasks = FilterTask(tasks, filters);
             var pagTasks = new PaginatedList<Dictionary<string, string>>();
             pagTasks.TotalLength = tasks.Count;
@@ -79,7 +79,7 @@ namespace Backend.Controllers
         //}
 
         [HttpPost("loadTask")]
-        public IActionResult Load(IFormFile file) 
+        public IActionResult Load(IFormFile file)
         {
             LoadTask(file);
             return Ok();
@@ -178,7 +178,7 @@ namespace Backend.Controllers
             var entities = context.Properties.ToList();
             int amount = entities.GroupBy(e => e.RowId).Count();
             List<Dictionary<string, string>> array = new();
-            for (int i = 0; i < amount;  i++)
+            for (int i = 0; i < amount; i++)
             {
                 array.Add(new Dictionary<string, string>());
             }
