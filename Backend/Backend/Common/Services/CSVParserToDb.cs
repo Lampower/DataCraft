@@ -34,7 +34,13 @@ namespace Backend.Common.Services
 
             Console.OutputEncoding = Encoding.UTF8;
             var input = Regex.Replace(rs.ReadToEnd(), "(\"[^;]*)(;)([^;]*\")", "$1\n$3");
+            input = Regex.Replace(input, "(;[^;\"]*)$", "$1;\r\n");
             var cells = input.Split(";\r\n").SelectMany(remainder => (remainder + ";").Split(";")).ToArray();
+            for (int i = 0; i < 661; i++)
+            {
+                if (i % columnNames.Length == 0) Console.Write("😎");
+                Console.WriteLine((i+1).ToString() + " " + cells[i]);
+            }
             
             var chunks = cells.Chunk(columnNames.Length).ToArray();
             //                      Perhaps -1 here? ^^^
