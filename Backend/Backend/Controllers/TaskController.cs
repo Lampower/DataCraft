@@ -81,6 +81,8 @@ namespace Backend.Controllers
         [HttpPost("loadTask")]
         public IActionResult Load(IFormFile file)
         {
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
             LoadTask(file);
             return Ok();
         }

@@ -26,38 +26,29 @@ namespace Backend.Common.Services
             if (rs == null) return null;
             
             var row1 = rs.ReadLine().Split(";");
-            if (row1.Length > 1)
-            {
-                return null;
-            }
+            //if (row1.Length > 1)
+            //{
+            //    return null;
+            //}
             var columnNames = rs.ReadLine().Split(";");
-
-            Console.OutputEncoding = Encoding.UTF8;
-            var input = Regex.Replace(rs.ReadToEnd(), "(\"[^;]*)(;)([^;]*\")", "$1\n$3");
-            input = Regex.Replace(input, "(;[^;\"]*)$", "$1;\r\n");
-            var cells = input.Split(";\r\n").SelectMany(remainder => (remainder + ";").Split(";")).ToArray();
-            for (int i = 0; i < 661; i++)
+            int rowId = -1;
+            while (!rs.EndOfStream)
             {
-                if (i % columnNames.Length == 0) Console.Write("😎");
-                Console.WriteLine((i+1).ToString() + " " + cells[i]);
-            }
-            
-            var chunks = cells.Chunk(columnNames.Length).ToArray();
-            //                      Perhaps -1 here? ^^^
-            for (int i = 0; i < chunks.Count(); i++)
-            {
-                for (int j = 0; j < chunks[i].Count(); j++)
+                rowId++;
+                var row = rs.ReadLine().Split(";");
+                if (row.Length != columnNames.Length)
+                    return null;
+                for (int columnId = 0; columnId < row.Length; columnId ++)
                 {
-                    var element = new PropertiesEntity()
+                    var entity = new PropertiesEntity
                     {
-                        ColumnName = columnNames[j],
-                        Value = chunks[i][j],
-                        Type = GetCellType(chunks[i][j]).ToString(),
-                        ColumnId = j,
-                        RowId = i
+                        ColumnName = columnNames[columnId],
+                        ColumnId = columnId,
+                        RowId = rowId,
+                        Value = row[columnId],
+                        Type = GetCellType(row[columnId]).ToString()
                     };
-
-                    properties.Add(element);
+                    properties.Add(entity);
                 }
             }
 
