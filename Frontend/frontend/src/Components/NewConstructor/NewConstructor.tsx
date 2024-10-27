@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./NewConstructor.css";
 import ChooseFiltersModal from "./ChooseFilterModal";
 import { useNavigate } from "react-router-dom";
 
 const NewConstructor = () => {
   const [columns, setColumns] = useState([
-    "ProjectName", "TaskType", "Status", "Priority", "TaskName", "CreatedAt", "CreatedBy", "UpdatedAt", "UpdatedBy", "Description", "Assigned", "Owner", "Deadline", "TimeRating", "Sprint", "Estimation", "TimeTaken", "WorkerGroup", "Resolution"
   ]);
   const [days, setDays] = useState(30);
   const [dataColumns, setDataColumns] = useState<{ [key: string]: any[] }>({});
@@ -50,6 +49,16 @@ const NewConstructor = () => {
       filters: filters,
       columns: selectedColumns,
     });
+
+    const loadNames = async () => {
+      const res = await fetch("http://localhost:5249/tasks/names");
+      const data = await res.json();
+      setColumns(data);
+    }
+
+    useEffect(() => {
+      loadNames();
+    }, [])
 
     checkPattern(nameToSave, patternFilterStr)
       .then(e => { if (!e) savePattern(nameToSave, patternFilterStr) });
