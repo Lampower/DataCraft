@@ -5,7 +5,7 @@ namespace Backend.Database
 {
     public class DatabaseContext: DbContext
     {
-        public DbSet<PropertiesEntity> Properties { get; set; }
+        public DbSet<TaskEntity> Tasks { get; set; }
         public DbSet<HistoryEntity> Histories { get; set; }
         public DbSet<PatternEntity> Patterns { get; set; }
 

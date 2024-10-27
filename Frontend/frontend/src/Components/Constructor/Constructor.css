@@ -16,13 +16,14 @@ html, body {
 .constructor {
   display: flex;
   flex-direction: column;
+  min-width: 400px;
   align-items: center;
   padding: 40px;
   background-color: #3a3a3a;
   border-radius: 30px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   color: #e0e0e0;
-  margin-top: -200px;
+ 
 }
 
 .title {
@@ -33,8 +34,10 @@ html, body {
 }
 
 .presets {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
   gap: 15px;
   width: 100%;
   justify-content: center;
@@ -42,6 +45,9 @@ html, body {
 }
 
 .preset-button {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
   padding: 12px;
   font-size: 14px;
   cursor: pointer;
@@ -70,7 +76,7 @@ html, body {
   font-weight: bold;
 }
 
-.create-filter-button, .apply-button {
+.create-filter-button, .apply-button-main {
   font-family: 'JetBrains Mono', monospace;
   padding: 12px 25px;
   font-size: 16px;
@@ -87,6 +93,12 @@ html, body {
   width: 100%;
   margin-bottom: 10px;
 }
+.close-button-preset{
+  display: flex;
+  border: none;
+  background-color: transparent;
+  justify-content: right;
+}
 
 .create-filter-button:hover {
   transform: scale(1.05);
@@ -94,13 +106,15 @@ html, body {
   background-color: #007bb5;
 }
 
-.apply-button {
-  background-color: rgb(15, 190, 175);
+.apply-button-main {
+  grid-column: span 2;
+  background-color: #008CBA;
   color: #fff;
-  margin-top: 15px; 
+  width: 100%;
+  margin-bottom: 10px;
 }
 
-.apply-button:hover {
+.apply-button-main:hover {
   transform: scale(1.05);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   background-color: rgb(245, 182, 56);

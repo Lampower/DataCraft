@@ -40,40 +40,35 @@ const NewConstructor = () => {
         });
     }
   };
- 
 
   const handleModalSubmit = (selectedColumns: string[]) => {
+    // Set default template name if not provided
+    const nameToSave = templateName.trim() || "Новый шаблон";
+    
     const patternFilterStr = JSON.stringify({
       days: days,
       filters: filters,
       columns: selectedColumns,
     });
 
-    checkPattern(templateName, patternFilterStr)
-    .then(e => { if (!e) savePattern(templateName, patternFilterStr) })
-    
+    checkPattern(nameToSave, patternFilterStr)
+      .then(e => { if (!e) savePattern(nameToSave, patternFilterStr) });
+
     let d;
     fillByFetch(d, 0, 100, {
       days: days,
       filters: filters,
       columns: selectedColumns,
     });
+    
     setShowChooseFiltersModal(false);
   };
 
   const checkPattern = async (patternName, patternFilter) => {
     const response = await fetch("http://localhost:5249/pattern");
     const data = await response.json();
-    let exists = false;
-    data.forEach(pattern => {
-      if (pattern.patternFilter == patternFilter)
-      {
-        exists = true;
-        return;
-      }
-    });
-    return exists
-  }
+    return data.some(pattern => pattern.patternFilter === patternFilter);
+  };
 
   const savePattern = (patternName, patternFilter) => {
     fetch("http://localhost:5249/pattern", {
@@ -81,7 +76,7 @@ const NewConstructor = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({"patternName": patternName, "patternFilter": patternFilter}),
+      body: JSON.stringify({ "patternName": patternName, "patternFilter": patternFilter }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -90,7 +85,7 @@ const NewConstructor = () => {
       .catch((error) => {
         console.error("Ошибка при сохранении шаблона:", error);
       });
-  }
+  };
 
   const fillByFetch = (data, from, amount, filter) => {
     fetch(`http://localhost:5249/tasks/filterset?from=${from}&amount=${amount}`, {
@@ -102,33 +97,28 @@ const NewConstructor = () => {
     })
       .then((response) => response.json())
       .then((d) => {
-        if (data == null)
-        {
+        if (data == null) {
           data = d;
           return fillByFetch(data, from + amount, amount, filter);
         }
-          
+        
         var isExiting = true;
-        var keys = Object.keys(d)
+        var keys = Object.keys(d);
         keys.forEach(key => {
-          data[key].entities = [...data[key].entities, ...d[key].entities]
-          if (data[key].entities.length < data[key].totalLength)
-            isExiting = false;
+          data[key].entities = [...data[key].entities, ...d[key].entities];
+          if (data[key].entities.length < data[key].totalLength) isExiting = false;
         });
-        if (isExiting)
-        {
-          navigate("/dashboard", {state: {data: data}})
+        if (isExiting) {
+          navigate("/dashboard", { state: { data: data } });
           return;
-        }
-        else
-        {
-          return fillByFetch(data, from + amount, amount, filter)
+        } else {
+          return fillByFetch(data, from + amount, amount, filter);
         }
       })
       .catch((error) => {
         console.error("Ошибка создания отчета:", error);
       });
-  }
+  };
 
   const handleFilterSelect = (column: string, value: string) => {
     setFilters((prevFilters) => {
@@ -137,12 +127,6 @@ const NewConstructor = () => {
       return updatedFilters;
     });
   };
-
-  const handleForm = () => {
-
-  }
-
- 
 
   return (
     <div className="new-constructor-container">
@@ -157,8 +141,6 @@ const NewConstructor = () => {
           </div>
         ))}
       </div>
-
-      
 
       <div className="data-columns-container">
         {Object.keys(dataColumns).map((column) => (
@@ -178,7 +160,7 @@ const NewConstructor = () => {
       </div>
 
       <div className="column">
-      <div className="template-name-container">
+        <div className="template-name-container">
           <h3>Название шаблона</h3>
           <input
             type="text"
@@ -200,26 +182,24 @@ const NewConstructor = () => {
         </div>
         <button
           className="create-report-button"
-          onClick={() => {setShowChooseFiltersModal(true)}}
-          disabled={(days === null || filters.length === 0)}
+          onClick={() => setShowChooseFiltersModal(true)}
+          disabled={days < 1 || filters.length === 0}
         >
           Сформировать
         </button>
       </div>
-      
 
       {showChooseFiltersModal && (
-    <ChooseFiltersModal
-        filters={columns}
-        activeColumns={activeColumns}
-        onClose={() => setShowChooseFiltersModal(false)}
-        onSubmit={(selectedFields) => {
-            console.log('Выбранные фильтры:', selectedFields);
-            handleModalSubmit(selectedFields);
-        }}
-    />
-)}
-
+        <ChooseFiltersModal
+          filters={columns}
+          activeColumns={activeColumns}
+          onClose={() => setShowChooseFiltersModal(false)}
+          onSubmit={(selectedFields) => {
+              console.log('Выбранные фильтры:', selectedFields);
+              handleModalSubmit(selectedFields);
+          }}
+        />
+      )}
     </div>
   );
 };
