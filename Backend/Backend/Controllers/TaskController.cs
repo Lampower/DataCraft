@@ -12,7 +12,7 @@ using System.Globalization;
 namespace Backend.Controllers
 {
     [Route("/tasks")]
-    public class TaskController: ControllerBase
+    public class TaskController : ControllerBase
     {
         DatabaseContext context;
         private readonly CSVParserToDb parser;
@@ -23,35 +23,36 @@ namespace Backend.Controllers
             this.parser = parser;
         }
 
-        //[HttpGet]
-        //public IActionResult Get(string column, int from = 0, int amount = 100)
-        //{
-        //    var names = context.Tasks.ToList()
-        //        .Select(t => SelectColumn(t, column))
-        //        .Distinct()
-        //        .ToList();
-        //    var pag = new PaginatedList<object?>();
-        //    pag.TotalLength = names.Count;
-        //    pag.Entities = names.Skip(from).Take(amount).ToList(); 
-        //    return Ok(pag);
-        //}
+        [HttpGet]
+        public IActionResult Get(string column, int from = 0, int amount = 100)
+        {
+            var data = GetAsDictionaryByRows();
+            var entities = data.Select(obj => { return obj[column]; })
+                .Distinct()
+                .ToList();
+            var pag = new PaginatedList<string>();
+            pag.TotalLength = entities.Count;
+            pag.Entities = entities.Skip(from).Take(amount).ToList();
+            return Ok(pag);
+        }
         /// <summary>
         /// Can take no more than 100 objects.
         /// </summary>
         /// <returns></returns>
-        //[HttpPost("filter")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //public IActionResult GetFiltered([FromBody] List<FilterDto> filters, int from = 0, int amount = 100)
-        //{
-        //    if (amount > 100) amount = 100;
+        [HttpPost("filter")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetFiltered([FromBody] List<FilterDto> filters, int from = 0, int amount = 100)
+        {
+            if (amount > 100) amount = 100;
 
-        //    var tasks = context.Tasks.ToList();
-        //    tasks = FilterTask(tasks, filters);
-        //    var pagTasks = new PaginatedList<TaskEntity>();
-        //    pagTasks.TotalLength = tasks.Count;
-        //    pagTasks.Entities = tasks.Skip(from).Take(amount).ToList();
-        //    return Ok(pagTasks);
-        //}
+            var tasks = GetAsDictionaryByRows();
+
+            tasks = FilterTask(tasks, filters);
+            var pagTasks = new PaginatedList<Dictionary<string, string>>();
+            pagTasks.TotalLength = tasks.Count;
+            pagTasks.Entities = tasks.Skip(from).Take(amount).ToList();
+            return Ok(pagTasks);
+        }
 
         [HttpGet("names")]
         public IActionResult GetTableNames()
@@ -78,32 +79,31 @@ namespace Backend.Controllers
         //}
 
         [HttpPost("loadTask")]
-        public IActionResult Load(IFormFile file) 
+        public IActionResult Load(IFormFile file)
         {
             LoadTask(file);
             return Ok();
         }
 
-        //[HttpPost("filterset")]
-        //public IActionResult FilterAndCount([FromBody] DiagramRequestDto dto, int from = 0, int amount = 100)
-        //{
-        //    var date = DateTime.Now.AddDays(-dto.Days);
-        //    var tasks = context.Tasks
-        //        .Where(t => t.CreatedAt > date || t.UpdatedAt > date).ToList();
-        //    tasks = FilterTask(tasks, dto.Filters);
+        [HttpPost("filterset")]
+        public IActionResult FilterAndCount([FromBody] DiagramRequestDto dto, int from = 0, int amount = 100)
+        {
+            //var date = DateTime.Now.AddDays(-dto.Days);
+            var tasks = GetAsDictionaryByRows();
+            tasks = FilterTask(tasks, dto.Filters);
 
-        //    Dictionary<string, PaginatedList<HashKeyDto>> responseObject = new();
-        //    foreach (var column in dto.Columns)
-        //    {
-        //        var hashSet = GetColumnOverview(tasks, column);
-        //        var pagHashSet = new PaginatedList<HashKeyDto>();
-        //        pagHashSet.TotalLength = hashSet.Count;
-        //        pagHashSet.Entities = hashSet.Skip(from).Take(amount).ToList();
-        //        responseObject.Add(column, pagHashSet);
-        //    }
-            
-        //    return Ok(responseObject);
-        //}
+            Dictionary<string, PaginatedList<HashKeyDto>> responseObject = new();
+            foreach (var column in dto.Columns)
+            {
+                var hashSet = GetColumnOverview(tasks, column);
+                var pagHashSet = new PaginatedList<HashKeyDto>();
+                pagHashSet.TotalLength = hashSet.Count;
+                pagHashSet.Entities = hashSet.Skip(from).Take(amount).ToList();
+                responseObject.Add(column, pagHashSet);
+            }
+
+            return Ok(responseObject);
+        }
 
         object? SelectColumn(object field, string ColumnName)
         {
@@ -162,27 +162,40 @@ namespace Backend.Controllers
             //}
             //context.SaveChanges();
         }
-        List<TaskEntity> FilterTask(List<TaskEntity> list, List<FilterDto> filters)
+        List<Dictionary<string, string>> FilterTask(List<Dictionary<string, string>> list, List<FilterDto> filters)
         {
             if (filters.Count == 0)
                 return list;
             var filter = filters[0];
             filters.Remove(filter);
 
-            var prop = typeof(TaskEntity).GetProperty(filter.Field);
-            list = list.Where(t => prop?.GetValue(t) == null ? false : prop.GetValue(t).Equals(filter.Value)).ToList();
+            var l = list.Where(el => el[filter.Field] == filter.Value).ToList();
             return FilterTask(list, filters);
         }
 
-        List<HashKeyDto> GetColumnOverview(List<TaskEntity> tasks, string columnName)
+        List<Dictionary<string, string>> GetAsDictionaryByRows()
         {
-            var prop = typeof(TaskEntity).GetProperty(columnName);
-            var result = new Dictionary<string, object>();
-            var list = tasks
-                .GroupBy(t => prop.GetValue(t))
-                .Select(t => new HashKeyDto { Name = t.Key == null ? "" : t.Key.ToString(), Count = t.Count() })
+            var entities = context.Properties.ToList();
+            int amount = entities.GroupBy(e => e.RowId).Count();
+            List<Dictionary<string, string>> array = new();
+            for (int i = 0; i < amount; i++)
+            {
+                array.Add(new Dictionary<string, string>());
+            }
+            array.ForEach(el => el = new Dictionary<string, string>());
+            entities.ForEach(entity =>
+            {
+                array[entity.RowId].Add(entity.ColumnName, entity.Value);
+            });
+
+            return array;
+        }
+
+        List<HashKeyDto> GetColumnOverview(List<Dictionary<string, string>> list, string key)
+        {
+            return list.GroupBy(el => el[key])
+                .Select(t => new HashKeyDto { Name = t.Key, Count = t.Count() })
                 .ToList();
-            return list;
         }
     }
 }
