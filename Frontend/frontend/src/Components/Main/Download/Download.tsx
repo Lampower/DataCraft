@@ -17,13 +17,13 @@ const Download = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, setFileCallback: (file: File | null) => void) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
-      if (selectedFile.name.endsWith(".xlsx")) {  
+      if (selectedFile.name.endsWith(".csv")) {  
         setFileCallback(selectedFile);
         setError(null); 
         event.target.value = ""; // Reset input value to allow the same file to be selected again
       } else {
         setFileCallback(null);
-        setError("Пожалуйста, загрузите файл в формате .xlsx");
+        setError("Пожалуйста, загрузите файл в формате .csv");
       }
     }
   };
@@ -34,12 +34,12 @@ const Download = () => {
     setHistoryDragging(false);
     const selectedFile = event.dataTransfer.files?.[0];
     if (selectedFile) {
-      if (selectedFile.name.endsWith(".xlsx")) {  
+      if (selectedFile.name.endsWith(".csv")) {  
         setFileCallback(selectedFile);
         setError(null);  
       } else {
         setFileCallback(null);
-        setError("Пожалуйста, загрузите файл в формате .xlsx");
+        setError("Пожалуйста, загрузите файл в формате .csv");
       }
     }
   };
@@ -150,7 +150,7 @@ const Download = () => {
             type="file"
             id="fileInput"
             ref={fileInputRef} 
-            accept=".xlsx"
+            accept=".csv"
             style={{ display: 'none' }}
             onChange={(e) => handleFileChange(e, setFile)}
           />
@@ -185,7 +185,7 @@ const Download = () => {
               type="file"
               id="historyFileInput"
               ref={historyFileInputRef}
-              accept=".xlsx"
+              accept=".csv"
               style={{ display: 'none' }}
               onChange={(e) => handleFileChange(e, setHistoryFile)}
             />
