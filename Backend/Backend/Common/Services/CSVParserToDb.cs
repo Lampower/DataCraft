@@ -1,5 +1,10 @@
 ﻿using Backend.Database.Models;
-using System.Collections.Generic;
+using CsvHelper;
+using CsvHelper.Configuration;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
+using System.Globalization;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Backend.Common.Services
 {
@@ -9,7 +14,8 @@ namespace Backend.Common.Services
         // вторая строка это ее стобцы
         public List<PropertiesEntity>? ParseCSV(IFormFile file)
         {
-            List<PropertiesEntity> properties = new List<PropertiesEntity>();
+            List<PropertiesEntity>? properties = new List<PropertiesEntity>();
+
             if (file.ContentType != "text/csv")
                 return null;
             var stream = file.OpenReadStream();
@@ -18,32 +24,24 @@ namespace Backend.Common.Services
             var ws = new StreamWriter(streamToWrite);
             var rs = new StreamReader(stream);
             if (rs == null) return null;
+            
             var row1 = rs.ReadLine().Split(";");
             if (row1.Length > 1)
             {
                 return null;
             }
             var columnNames = rs.ReadLine().Split(";");
-            while (!rs.EndOfStream)
-            {
-                var row = rs.ReadLine();
-                ws.WriteLine(row);
-            }
-            stream.Close();
-            rs.Close();
-            streamToWrite.Close();
 
-            string text = File.ReadAllText(path);
-            var cells = text.Split(';');
-            var chunks = cells.Chunk(columnNames.Length - 1).ToArray();
-            for ( int i = 0; i < chunks.Count(); i++)
+            Console.OutputEncoding = Encoding.UTF8;
+            var input = Regex.Replace(rs.ReadToEnd(), "(\"[^;]*)(;)([^;]*\")", "$1\n$3");
+            var cells = input.Split(";\r\n").SelectMany(remainder => (remainder + ";").Split(";")).ToArray();
+            
+            var chunks = cells.Chunk(columnNames.Length).ToArray();
+            //                      Perhaps -1 here? ^^^
+            for (int i = 0; i < chunks.Count(); i++)
             {
                 for (int j = 0; j < chunks[i].Count(); j++)
                 {
-                    if (chunks[i][j].StartsWith("\"") && chunks[i][j].EndsWith("\""))
-                    {
-                        chunks[i][j].Replace("\n", " ");
-                    }
                     var element = new PropertiesEntity()
                     {
                         ColumnName = columnNames[j],
@@ -52,9 +50,11 @@ namespace Backend.Common.Services
                         ColumnId = j,
                         RowId = i
                     };
+
                     properties.Add(element);
                 }
             }
+
             return properties;
         }
 
