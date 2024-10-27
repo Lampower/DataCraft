@@ -130,7 +130,8 @@ const Download = () => {
     <div className="download-modal">
       <div className="modal-content">
         <div className="download-modal-header">Загрузка файла с компьютера</div>
-        <div className="download-modal-sub">Поддерживаемые форматы: .xlsx</div>
+        <div className="download-modal-sub">Первая строчка это название файла, вторая строчка это название колонок.
+        Не загружать файлы с многострочниками, использовать для разделения точку с запятой, количество точек запятой в строке должно совпадать с количеством точек с запятой в строчке с названием колонок.</div>
 
         <div
           className={`upload-area ${dragging ? "dragging" : ""}`} 
